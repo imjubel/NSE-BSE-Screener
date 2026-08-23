@@ -292,6 +292,7 @@ def send_telegram(message: str):
 # MAIN — one full pass, then exit (cron handles repetition)
 # ----------------------------------------------------------------------
 def main():
+  send_telegram("✅ Test alert — screener pipeline is working!")
     start = time.time()
     universe = get_universe(include_bse=INCLUDE_BSE)
     if MAX_TICKERS:
