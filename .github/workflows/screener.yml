@@ -26,6 +26,6 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
           INCLUDE_BSE: "true"
-          MAX_TICKERS: ""
+          MAX_TICKERS: "50"
           SCAN_TIMEFRAMES: "15m,1h,4h,1d"
         run: python screener.py
