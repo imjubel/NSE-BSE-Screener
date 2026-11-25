@@ -1,31 +1,27 @@
-name: NSE/BSE Screener
-
+name: screener
 on:
   schedule:
-    - cron: "*/15 4-9 * * 1-5"
-  workflow_dispatch: {}
-
+    # every 10 min, 08:30-16:50 IST (03:00-10:50 UTC), Mon-Fri
+    - cron: "*/10 3-10 * * 1-5"
+  workflow_dispatch:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 20
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run screener
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Restore de-dupe state
+        uses: actions/cache@v4
+        with:
+          path: .state
+          key: state-${{ github.run_id }}
+          restore-keys: state-
+      - run: python screener.py
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
-          INCLUDE_BSE: "true"
-          MAX_TICKERS: "50"
-          SCAN_TIMEFRAMES: "15m,1h,4h,1d"
-        run: python screener.py
